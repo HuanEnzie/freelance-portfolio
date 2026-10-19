@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vahoon Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: editing-timeline feel — video work shown in real frame ratios with timecodes, automation shown as trigger → action pipelines. */
+:root{
+  --paper:#f4f5f2; --card:#ffffff; --ink:#16181d; --mute:#5e636e; --rule:#dfe1dc;
+  --accent:#3346c4; --accent-ink:#ffffff; --tape:#ffe08a; --tape-ink:#4a3a00;
+  --frame:#0f1115;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121418; --card:#1a1d23; --ink:#eef0f3; --mute:#9aa0ab; --rule:#2b2f37;
+    --accent:#8e9bff; --accent-ink:#0d1030; --tape:#5c4a10; --tape-ink:#ffe8a3; --frame:#000000;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121418; --card:#1a1d23; --ink:#eef0f3; --mute:#9aa0ab; --rule:#2b2f37;
+  --accent:#8e9bff; --accent-ink:#0d1030; --tape:#5c4a10; --tape-ink:#ffe8a3; --frame:#000000;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-block:48px 72px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+
+/* hero */
+.hero{display:grid;gap:20px}
+.hero h1{font:700 clamp(36px,6vw,64px)/1.02 var(--display);letter-spacing:-.03em;margin:0;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{margin:0;max-width:60ch;color:var(--mute);font-size:18px}
+.contact{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{display:inline-flex;gap:8px;align-items:center;font:600 14px var(--body);text-decoration:none;
+  padding:10px 16px;border-radius:8px;border:1px solid var(--rule);color:var(--ink);background:var(--card)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.todo{background:var(--tape);color:var(--tape-ink);font:500 13px var(--mono);padding:4px 8px;border-radius:4px}
+.meter{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:12px}
+.meter div{flex:1 1 200px;padding:16px 16px 16px 0;display:grid;gap:2px}
+.meter b{font:700 26px/1.1 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.meter span{color:var(--mute);font-size:14px}
+
+/* sections */
+section{margin-top:72px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:8px 24px;margin-bottom:20px}
+.head h2{font:700 clamp(26px,3.6vw,36px)/1.1 var(--display);letter-spacing:-.02em;margin:0}
+.head p{margin:0;color:var(--mute);max-width:52ch}
+
+/* video reel */
+.reel{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.clip{grid-column:span 4;display:grid;gap:10px;align-content:start;min-width:0}
+.clip.wide{grid-column:span 8}
+.screen{position:relative;background:var(--frame);border-radius:10px;overflow:hidden}
+.screen video{display:block;width:100%;height:100%;object-fit:cover}
+.v916{aspect-ratio:9/16;max-height:520px;margin-inline:auto;width:100%}
+.v169{aspect-ratio:16/9;width:100%}
+.tc{position:absolute;top:8px;left:8px;font:500 11px var(--mono);color:#fff;background:rgba(0,0,0,.55);
+  padding:3px 6px;border-radius:4px;pointer-events:none}
+.clip h3{font:600 17px/1.3 var(--body);margin:0}
+.clip p{margin:0;color:var(--mute);font-size:14px}
+.pair{grid-column:span 8;display:grid;grid-template-columns:1fr 1fr;gap:16px;min-width:0}
+.pair .clip{grid-column:auto}
+.pair-note{grid-column:span 4;align-self:center;display:grid;gap:10px}
+.pair-note h3{font:600 17px/1.3 var(--body);margin:0}
+.pair-note p{margin:0;color:var(--mute);font-size:14px}
+.callout{grid-column:1/-1;background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:20px;display:grid;gap:6px}
+.callout h3{margin:0;font:600 17px var(--body)}
+.callout p{margin:0;color:var(--mute);font-size:15px;max-width:80ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.chips span{font:500 12px var(--mono);border:1px solid var(--rule);border-radius:999px;padding:3px 10px;color:var(--mute)}
+
+/* automation */
+.cases{display:grid;gap:0;border-top:1px solid var(--rule)}
+.case{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);gap:8px 32px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.case h3{margin:0;font:600 18px/1.3 var(--body)}
+.case .what{margin:4px 0 0;color:var(--mute);font-size:15px}
+.flow{font:500 13px/1.9 var(--mono);color:var(--ink);margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
+.flow i{font-style:normal;color:var(--accent)}
+.flow span{background:var(--card);border:1px solid var(--rule);padding:1px 8px;border-radius:6px;white-space:nowrap}
+.case .src{font-size:14px;margin-top:6px}
+
+/* how */
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.how div{display:grid;gap:4px;border-top:2px solid var(--ink);padding-top:12px}
+.how b{font:600 16px var(--body)}
+.how p{margin:0;color:var(--mute);font-size:14px}
+footer{margin-top:72px;color:var(--mute);font-size:13px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+
+@media (max-width:760px){
+  .clip,.clip.wide,.pair,.pair-note{grid-column:1/-1}
+  .v916{max-height:none;max-width:340px}
+  .case{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="mono">Nguyễn Văn Huân · Vahoon Studio · Vietnam · GMT+7 · works in English</div>
+  <h1>Short-form <em>AI video</em> and the automation that ships it.</h1>
+  <p>I edit and generate vertical video for brands, and build the tools behind it: Google Sheets pipelines, chatbots, Chrome extensions and desktop apps that remove the manual work.</p>
+  <div class="contact">
+    <a class="btn primary" href="https://github.com/HuanEnzie" target="_blank" rel="noopener">GitHub · HuanEnzie</a>
+    <a class="btn" href="mailto:nguyenhuan200y@gmail.com">nguyenhuan200y@gmail.com</a>
+  </div>
+  <div class="meter">
+    <div><b>12 brands</b><span>~30 social accounts I produce for</span></div>
+    <div><b>150k+ views / week</b><span>on 3 of those channels, week of Oct 12, 2026</span></div>
+    <div><b>30+ projects</b><span>video pipelines, automation, web apps, extensions</span></div>
+  </div>
+</header>
+
+<section id="video">
+  <div class="head">
+    <h2>Video work</h2>
+    <p>Real exports, compressed for the web. Click to play with sound.</p>
+  </div>
+
+  <div class="reel">
+    <article class="clip wide">
+      <div class="screen v169">
+        <video src="media/quiet-garden.mp4" poster="media/quiet-garden.jpg" controls preload="none" playsinline></video>
+        <span class="tc">16:9 · 01:00</span>
+      </div>
+      <h3>"Quiet Garden", animated short</h3>
+      <p>A voxel diorama I built in Three.js, animated and cut into a 60-second film with music and sound design.</p>
+    </article>
+
+    <article class="clip">
+      <div class="screen v916">
+        <video src="media/tech-news-mascot.mp4" poster="media/tech-news-mascot.jpg" controls preload="none" playsinline></video>
+        <span class="tc">9:16 · 01:00</span>
+      </div>
+      <h3>Tech news with a 3D mascot</h3>
+      <p>Mascot generated from a logo, real screen recordings of the repo and terminal, AI voiceover, kinetic captions.</p>
+    </article>
+
+    <div class="pair">
+      <article class="clip">
+        <div class="screen v916">
+          <video src="media/ai-edit.mp4" poster="media/ai-edit.jpg" controls preload="none" playsinline></video>
+          <span class="tc">AI edit · 00:34</span>
+        </div>
+      </article>
+      <article class="clip">
+        <div class="screen v916">
+          <video src="media/human-edit.mp4" poster="media/human-edit.jpg" controls preload="none" playsinline></video>
+          <span class="tc">Human edit · 00:34</span>
+        </div>
+      </article>
+    </div>
+    <div class="pair-note">
+      <div class="mono">Same footage, two cuts</div>
+      <h3>Gift-guide product video</h3>
+      <p>The left version comes out of my automated pipeline. The right one is the same material finished by hand. Clients choose how much polish each video needs, and the cost follows.</p>
+    </div>
+
+    <article class="clip wide">
+      <div class="screen v169">
+        <video src="media/explainer-excerpt.mp4" poster="media/explainer-excerpt.jpg" controls preload="none" playsinline muted></video>
+        <span class="tc">16:9 · excerpt 00:45 of 16:53</span>
+      </div>
+      <h3>Faceless psychology explainer</h3>
+      <p>A 17-minute script split into scenes, with stock and AI visuals matched to each line and assembled by a Python + ffmpeg pipeline. Picture-only excerpt.</p>
+    </article>
+
+    <div class="callout">
+      <div class="mono">Talking-head &amp; interviews</div>
+      <h3>From a 2-hour recording to clean short videos</h3>
+      <p>My open-source tool turns long recordings into editable CapCut projects: Whisper transcription, AI topic extraction and scoring to find the strongest segments, auto-timed captions and audio balancing. Then I finish each video by hand.</p>
+      <div class="chips"><span>CapCut</span><span>ffmpeg</span><span>Whisper</span><span>Gemini TTS</span><span>Google Veo / Flow</span><span>GPT image</span><span>Grok video</span><span>HTML motion graphics</span></div>
+      <a class="src" href="https://github.com/HuanEnzie/capcut-auto" target="_blank" rel="noopener">github.com/HuanEnzie/capcut-auto</a>
+    </div>
+  </div>
+</section>
+
+<section id="automation">
+  <div class="head">
+    <h2>Automation &amp; tools</h2>
+    <p>Built on what small teams already use: Google Sheets, Facebook, Chrome. Node.js and Python where needed.</p>
+  </div>
+
+  <div class="cases">
+    <div class="case">
+      <div><h3>AI sales chatbot for Facebook</h3>
+        <p class="what">Replies to comments and DMs from the shop's own catalog, understands product photos, validates phone and address, writes the order. An AI-vs-AI harness scores conversations before go-live.</p></div>
+      <p class="flow"><span>Comment / DM</span><i>→</i><span>intent router</span><i>→</i><span>Gemini reply</span><i>→</i><span>validate</span><i>→</i><span>Sheets order</span></p>
+    </div>
+    <div class="case">
+      <div><h3>Multi-platform auto-posting</h3>
+        <p class="what">Schedule rows in a Google Sheet, publish to TikTok, YouTube, Instagram and Facebook. Shipped as a reusable Apps Script library with retries and alerts.</p></div>
+      <p class="flow"><span>Sheet row</span><i>→</i><span>Drive media</span><i>→</i><span>social API</span><i>→</i><span>status + Telegram alert</span></p>
+    </div>
+    <div class="case">
+      <div><h3>Browser automation over CDP</h3>
+        <p class="what">Attaches to logged-in Chrome profiles over the DevTools Protocol to batch-generate images and videos, poll job status and download results.</p></div>
+      <p class="flow"><span>Prompt list</span><i>→</i><span>Chrome CDP</span><i>→</i><span>generate</span><i>→</i><span>poll</span><i>→</i><span>download</span></p>
+    </div>
+    <div class="case">
+      <div><h3>Workshop automation</h3>
+        <p class="what">Registration to follow-up with no manual email. Each new event is configured in the sheet, not in code.</p></div>
+      <p class="flow"><span>Google Form</span><i>→</i><span>Sheets</span><i>→</i><span>confirm + D-1 / H-1 reminders</span><i>→</i><span>feedback</span><i>→</i><span>recording page</span></p>
+    </div>
+    <div class="case">
+      <div><h3>TTS Studio (desktop)</h3>
+        <p class="what">Batch text-to-speech with Gemini: API-key rotation, quota-aware queue that pauses and resumes, pronunciation dictionary.</p>
+        <a class="src" href="https://github.com/HuanEnzie/tts-studio" target="_blank" rel="noopener">github.com/HuanEnzie/tts-studio</a></div>
+      <p class="flow"><span>CSV script</span><i>→</i><span>key pool</span><i>→</i><span>Gemini TTS</span><i>→</i><span>MP3 per line</span></p>
+    </div>
+    <div class="case">
+      <div><h3>Batch video tools</h3>
+        <p class="what">Speed and duration batch processor with automatic GPU encoder detection and in-app updates; slideshow maker from photos and PDFs.</p>
+        <a class="src" href="https://github.com/HuanEnzie/auto-speed-media-releases" target="_blank" rel="noopener">auto-speed-media</a> ·
+        <a class="src" href="https://github.com/HuanEnzie/auto-video-img" target="_blank" rel="noopener">auto-video-img</a></div>
+      <p class="flow"><span>folder</span><i>→</i><span>queue (1–4 workers)</span><i>→</i><span>NVENC / QSV / AMF / x264</span><i>→</i><span>MP4</span></p>
+    </div>
+    <div class="case">
+      <div><h3>Chrome extension: OCR + translate in place</h3>
+        <p class="what">Scans the whole page, OCRs text inside images, canvas and video, and overlays the translation at the same position. Runs locally with WebAssembly.</p></div>
+      <p class="flow"><span>viewport capture</span><i>→</i><span>Tesseract.js</span><i>→</i><span>local translation model</span><i>→</i><span>overlay</span></p>
+    </div>
+    <div class="case">
+      <div><h3>Social analytics dashboard</h3>
+        <p class="what">Daily snapshots of ~30 accounts on 4 platforms, weekly brief with top posts and channels that need attention.</p></div>
+      <p class="flow"><span>daily job</span><i>→</i><span>platform APIs</span><i>→</i><span>snapshot</span><i>→</i><span>weekly brief</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="head"><h2>How I work</h2></div>
+  <div class="how">
+    <div><b>Small paid trial first</b><p>One video or one milestone, so you can judge the work before committing to more.</p></div>
+    <div><b>Daily updates</b><p>Short progress notes, and I overlap with your working hours when the project needs it.</p></div>
+    <div><b>You own everything</b><p>Code comes with full source, a README and a handover video. Video comes with project files on request.</p></div>
+  </div>
+</section>
+
+<footer>
+  <span>Client work is shown with brand details removed.</span>
+  <span>Nguyễn Văn Huân · github.com/HuanEnzie · nguyenhuan200y@gmail.com</span>
+</footer>
+</div>
+
+</html>
